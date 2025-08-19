@@ -25,3 +25,28 @@ func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
 	ciphertext := gcm.Seal(nil, nonce, plaintext, nil)
 	return append(nonce, ciphertext...), nil
 }
+
+func Decrypt(ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	nonceSize := gcm.NonceSize()
+	if len(ciphertext) < nonceSize {
+		return nil, fmt.Error("ciphertext too short")
+	}
+
+	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return plaintext, nil
+}
