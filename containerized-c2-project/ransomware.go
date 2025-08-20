@@ -28,7 +28,7 @@ func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
 	return append(nonce, ciphertext...), nil
 }
 
-func Decrypt(ciphertext []byte) ([]byte, error) {
+func Decrypt(ciphertext []byte), key []byte ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err

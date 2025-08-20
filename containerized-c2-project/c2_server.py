@@ -49,7 +49,7 @@ if __name__ == '__main__':
         httpd = HTTPServer(server_address, MyRequestHandler)
 
         #Start server in a separate thread
-        server_thread = threading.Thread(target=httpd.server_forever)
+        server_thread = threading.Thread(target=httpd.serve_forever)
         server_thread.start()
 
         #Start user input
