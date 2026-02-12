@@ -1,8 +1,2 @@
-module your_module_name
-
-go 1.18
-
-require (
-    github.com/some/dependency v1.0.0
-    github.com/another/dependency v2.0.0
-)
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
